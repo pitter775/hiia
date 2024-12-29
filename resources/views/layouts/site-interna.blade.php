@@ -14,8 +14,10 @@
   <link href="{{ asset('assets') }}/img/favicon.png" rel="icon">
   <link href="{{ asset('assets') }}/img/apple-touch-icon.png" rel="apple-touch-icon">
 
-  <!-- Google Fonts -->  
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Template Main CSS File -->
   

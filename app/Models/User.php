@@ -23,13 +23,8 @@ class User extends Authenticatable
         'email', 
         'password', 
         'tipo_usuario', 
-        'cpf', 
-        'sexo', 
-        'idade', 
+        'status', 
         'telefone',
-        'cadastro_completo',
-        'registro_profissional', 
-        'tipo_registro_profissional', 
         'photo'
     ];
 
@@ -56,17 +51,6 @@ class User extends Authenticatable
     /**
      * Relacionamento com reservas
      */
-    public function reservas()
-    {
-        return $this->hasMany(Reserva::class, 'usuario_id');
-    }
-
-    /**
-     * Relacionamento polimórfico com endereço
-     */
-    public function endereco(): MorphOne
-    {
-        return $this->morphOne(Endereco::class, 'enderecavel');
-    }
+    
 }
 

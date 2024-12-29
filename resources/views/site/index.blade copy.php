@@ -66,10 +66,10 @@
 
 
   <style>
-    a.linkpub{ color: #777; font-family: "Roboto", sans-serif !important; font-size: 13px; margin-top: -10px}
+    a.linkpub{ color: #777; font-family: "Archivo", serif,  sans-serif !important; font-size: 13px; margin-top: -10px}
     a.linkpub:hover{ color: #fff;}
     .icon-box2{ padding: 10px !important}
-    h3 {   font-family: "Nunito"; font-weight: 500;}
+    h3 {   font-family: "Nunito"; font-weight: 400;}
     #hero {
         width: 100%;
         height: 100vh;

@@ -16,6 +16,12 @@
     <meta name="author" content="pitter775@gmail.com">
 
 
+      <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+
     <!-- Favicons -->
     <link href="{{ asset('paper') }}/assets/img/icon_logo_ge.png" rel="icon">
     <link href="{{ asset('paper') }}/assets/img/icon_logo_ge.png" rel="apple-touch-icon">

@@ -4,13 +4,41 @@ use App\Http\Controllers\site\SiteController;
 use App\Http\Controllers\cliente\ClienteDashboardController;
 use App\Http\Controllers\cliente\ReservaClienteController;
 use App\Http\Controllers\admin\AdminDashboardController;
-use App\Http\Controllers\admin\SalaController;
-use App\Http\Controllers\admin\ReservaController;
-use App\Http\Controllers\admin\RelatorioController;
+use App\Http\Controllers\admin\ModeloController;
 use App\Http\Controllers\admin\UsuarioController;
 use App\Http\Controllers\ImagemSalaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CepController;
+use App\Services\GPTService;
+
+
+use OpenAI\Laravel\Facades\OpenAI;
+
+Route::get('/test-openai', function () {
+    $response = OpenAI::chat()->create([
+        'model' => 'gpt-3.5-turbo',
+        'messages' => [
+            ['role' => 'system', 'content' => 'Seja extremamente resumido e direto.'],
+            ['role' => 'user', 'content' => 'como crescem os cabelos?'],
+        ],
+        'temperature' => 0, // Garante respostas mais objetivas
+    ]);
+
+    return response()->json($response->choices[0]->message->content);
+});
+
+// Route::get('/testar-gpt', function () {
+//     $gpt = new GPTService();
+//     $resposta = $gpt->enviarMensagem('Olá, GPT! Pode me explicar o que é Laravel?');
+//     return $resposta;
+// });
+
+
+
+
+
+
+
 
 
 Route::get('/debug-usuario', function () {
@@ -25,42 +53,14 @@ Route::get('/debug-usuario', function () {
         'cadastro_completo' => auth()->user()->cadastro_completo,
     ]);
 });
-
-
 Route::get('/politica-privacidade', function () {
     return view('site.politica-privacidade1');
 })->name('privacidade');
 
 // Rota pública para o site
 Route::get('/', [SiteController::class, 'index'])->name('site.index');
-Route::get('/sala/{id}', [SiteController::class, 'detalhes'])->name('site.sala.detalhes');
 
 
-// Rota para exibir a página de revisão da reserva (GET)
-Route::get('/reserva/revisao', [SiteController::class, 'exibirRevisao'])->name('reserva.revisao');
-// Rota para processar os dados da reserva e salvar na sessão (POST)
-Route::post('/reserva/revisao', [SiteController::class, 'revisao'])->name('reserva.revisao.processar');
-// Rota para confirmar a reserva (POST)
-// Route::post('/reserva/confirmar', [SiteController::class, 'salvarReserva'])->name('reserva.confirmar');
-Route::post('/reserva/salvar', [SiteController::class, 'salvarReserva'])->name('reserva.salvar');
-
-
-
-
-
-// Rotas para gestão de imagens
-Route::post('/salas/{sala}/imagens', [ImagemSalaController::class, 'store'])->name('imagens.store');
-Route::delete('/imagens/{imagem}', [ImagemSalaController::class, 'destroy'])->name('imagens.destroy');
-Route::post('/imagens/{imagem}/principal', [ImagemSalaController::class, 'definirPrincipal'])->name('imagens.definirPrincipal');
-
-// ** Nova rota para buscar horários disponíveis para uma sala em uma data específica **
-Route::get('/horarios-disponiveis/{sala_id}/{data_reserva}', [ReservaController::class, 'horariosDisponiveis'])->name('reservas.horariosDisponiveis');
-
-// Rota para criação de reservas por hora
-Route::post('/reservar', [ReservaController::class, 'store'])->name('reservar.store');
-
-// Exibe todas as reservas de uma sala (ainda útil para admin ou dashboard)
-Route::get('/reservas/{sala_id}', [ReservaController::class, 'listarReservas']);
 
 // Outras rotas públicas
 Route::view('/politica-de-privacidade', 'politica-de-privacidade')->name('politica.privacidade');
@@ -84,19 +84,22 @@ Route::middleware(['auth'])->group(function () {
 
 // Rotas para administradores
 Route::middleware(['auth', 'admin'])->group(function () {
+
     Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    
+    // Rotas para Modelos
+    Route::get('/admin/modelos', [ModeloController::class, 'index'])->name('admin.modelos');
+    Route::get('/admin/modelos/rascunho', [ModeloController::class, 'getDraft'])->name('modelos.rascunho');
+    Route::post('/admin/modelos/rascunho', [ModeloController::class, 'saveDraft'])->name('modelos.rascunho');
+    Route::post('/admin/modelos/criar', [ModeloController::class, 'store'])->name('modelos.criar');
+    Route::post('/admin/modelos/ativar', [ModeloController::class, 'activate'])->name('modelos.ativar');
+    Route::get('/admin/modelos/dominios', [ModeloController::class, 'getAllowedDomains'])->name('modelos.dominios');
+    Route::post('/admin/modelos/dominios/adicionar', [ModeloController::class, 'addDomain'])->name('modelos.add_domain');
+    Route::post('/admin/modelos/dominios/remover', [ModeloController::class, 'removeDomain'])->name('modelos.remove_domain');
 
-    Route::get('/admin/salas', [SalaController::class, 'index'])->name('salas.index');
-    Route::get('/admin/salas/create', [SalaController::class, 'create'])->name('salas.create');
-    Route::post('/admin/salas', [SalaController::class, 'store'])->name('salas.store');
-    Route::get('/admin/salas/{sala}/edit', [SalaController::class, 'edit'])->name('salas.edit');
-    Route::post('/admin/salas/{sala}', [SalaController::class, 'update'])->name('salas.update');
-    Route::delete('/admin/salas/{sala}', [SalaController::class, 'destroy'])->name('salas.destroy');
-    Route::get('/admin/salas/{sala}/dados', [SalaController::class, 'getSalaData'])->name('salas.dados');
-    Route::get('/admin/salas/{sala}/imagens', [ImagemSalaController::class, 'index'])->name('imagens.index');
-    Route::delete('/admin/imagens/{imagem}', [ImagemSalaController::class, 'destroy'])->name('imagens.destroy');
-    Route::get('/salas/all', [SalaController::class, 'getSalasData'])->name('salas.data');
 
+
+   
     // Rotas para gerenciamento de usuários
     Route::get('/admin/usuarios', [UsuarioController::class, 'index'])->name('admin.usuarios.index');
     Route::get('/admin/usuarios/listar', [UsuarioController::class, 'listar'])->name('admin.usuarios.listar');
@@ -105,15 +108,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::delete('/admin/usuarios/deletar/{id}', [UsuarioController::class, 'deletar'])->name('admin.usuarios.deletar');
     Route::get('/admin/usuarios/detalhes/{id}', [UsuarioController::class, 'detalhes'])->name('admin.usuarios.detalhes');
     Route::post('/admin/usuarios/{user}/toggle-status', [UsuarioController::class, 'toggleStatus'])->name('admin.usuarios.toggle-status');
-
-    // Rotas para reservas e relatórios
-    Route::get('/admin/reservas', [ReservaController::class, 'index']);
-    Route::get('/admin/reservas/listar', [ReservaController::class, 'listar'])->name('admin.reservas.listar');
-    Route::get('/admin/relatorios', [RelatorioController::class, 'index']);
-
-
-
-
 
 });
 
