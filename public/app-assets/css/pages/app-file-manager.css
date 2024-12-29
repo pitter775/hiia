@@ -42,10 +42,10 @@
   margin-right: 0.5rem; }
 
 .file-manager-application .sidebar-file-manager .sidebar-inner .sidebar-list .my-drive .jstree-node.jstree-closed > .jstree-icon {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23545e51' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-chevron-right'%3E%3Cpolyline points='9 18 15 12 9 6'%3E%3C/polyline%3E%3C/svg%3E"); }
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235784a9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-chevron-right'%3E%3Cpolyline points='9 18 15 12 9 6'%3E%3C/polyline%3E%3C/svg%3E"); }
 
 .file-manager-application .sidebar-file-manager .sidebar-inner .sidebar-list .my-drive .jstree-node.jstree-open > .jstree-icon {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23545e51' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-chevron-down'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); }
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235784a9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-chevron-down'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); }
 
 .file-manager-application .sidebar-file-manager .sidebar-inner .sidebar-list .list-group-labels,
 .file-manager-application .sidebar-file-manager .sidebar-inner .sidebar-list .storage-status {
@@ -53,7 +53,7 @@
 
 .file-manager-application .sidebar-file-manager .sidebar-inner .sidebar-list .list-group-item {
   padding: 0.58rem 1.9rem;
-  font-weight: 500;
+  font-weight: 400;
   border: 0;
   border-radius: 0;
   border-left: 2px solid transparent; }
@@ -66,8 +66,8 @@
 
 .file-manager-application .sidebar-file-manager .sidebar-inner .sidebar-list .active {
   background-color: transparent;
-  border-color: #545e51;
-  color: #545e51; }
+  border-color: #5784a9;
+  color: #5784a9; }
 
 .file-manager-application .sidebar-file-manager.show {
   transition: all 0.25s ease, background 0s !important;
@@ -152,7 +152,7 @@
   margin-bottom: 0; }
 
 .file-manager-application .content-area-wrapper .file-manager-main-content .file-manager-content-body .view-container .file-manager-item.selected {
-  border-color: #545e51; }
+  border-color: #5784a9; }
 
 .file-manager-application .content-area-wrapper .file-manager-main-content .file-manager-content-body .view-container .file-name {
   width: calc(100% - 26rem);

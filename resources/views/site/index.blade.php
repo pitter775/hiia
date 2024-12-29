@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Espaço Equilibra Mente - site</title>
+  <title>Hiia</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
   <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -15,7 +15,9 @@
   <link href="{{ asset('assets') }}/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="{{ asset('assets') }}/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -39,15 +41,13 @@
     <div class="container d-flex align-items-center hero-content">
 
       <div class="logo mr-auto">
-        <a href="/"><img src="{{ asset('assets') }}/img/logofinoescuro.png" style="height: 30px; opacity: 0;"> </a>
-        <!-- Uncomment below if you prefer to use an image logo -->
-        <!-- <a href="index.html"><img src="{{ asset('assets') }}/img/logo.png" alt="" class="img-fluid"></a>-->
+        <a href="/">HiiA</a>
       </div>
 
       <nav class="nav-menu d-none d-lg-block">
         <ul>
-          <li class="active"><a href="#hero">Home</a></li>
-          <li><a href="#about">Salas</a></li>
+          {{-- <li class="active"><a href="#hero">Home</a></li> --}}
+          
           <li><a href="#sobre">Sobre Nós</a></li>
              <li>
               @if(auth()->check())
@@ -70,22 +70,9 @@
   <!-- ======= Hero Section ======= -->
   <section id="hero">
     <div class="hero-container" data-aos="fade-up">
-      <div class="row no-gutters" style="margin-top: 100px; padding: 60px; background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0));">
-        <div class="content col-md-6 centercont" data-aos="fade-up" >
-          <img src="{{ asset('assets') }}/img/logoescuro.png" alt="" class="img-fluid" style=" width: 50%; margin-top: 80px"> 
-          <h1>Aluguel de Salas Modernas e Bem Localizadas para seus Negócios</h1>
-          <a href="#about" class="btn-get-started scrollto mt-3"><i class="bx bx-chevrons-down"></i></a>
-
-          
-        </div>
-        <div class="col-md-6" style=" padding-top: 80px"> 
-          <img src="{{ asset('assets') }}/img/sala1.jpg" alt="" class="img-fluid" style=" box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); "> 
-        </div>
-        <div class="col-md-12"> 
-            
-        </div>
-      </div>
-    
+      <h1>Um super atendente em constante evolução<br> para o seu site e suas vendas!</h1>
+      <h2>Tenha um atendente sempre disponivel, que conhece tudo sobre<br> o seu negócio e ter em seu site é muito simples,  após ensinar a HiiA <br> o atendente já vai estar pronto.</h2>
+      <a href="#about" class="btn-get-started scrollto"><i class="bx bx-chevrons-down"></i></a>
     </div>
   </section><!-- End Hero -->
 
@@ -103,42 +90,7 @@
           </div>
         </div>
 
-        <div class="row">
-          @foreach($salas as $sala)
-            <div class="col-md-6 icon-box m-0 p-0" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
-              
-              
-              <div class="card m-3 cardunidades">
-                <!-- Carrossel de Imagens da Sala com Intervalo Personalizado -->
-                @if($sala->imagens->isNotEmpty())
-                  <div id="carouselSala{{ $sala->id }}" class="carousel slide" data-ride="carousel" data-interval="{{ 10000 + ($loop->index * 1000) }}">
-                    <div class="carousel-inner">
-                      @foreach($sala->imagens as $index => $imagem)
-                        <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
-                          <img src="{{ asset('storage/' . $imagem->path) }}" class="d-block w-100" alt="{{ $sala->nome }}">
-                        </div>
-                      @endforeach
-                    </div>
-                    <a class="carousel-control-prev" href="#carouselSala{{ $sala->id }}" role="button" data-slide="prev">
-                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                      <span class="sr-only">Anterior</span>
-                    </a>
-                    <a class="carousel-control-next" href="#carouselSala{{ $sala->id }}" role="button" data-slide="next">
-                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                      <span class="sr-only">Próximo</span>
-                    </a>
-                  </div>
-                @endif
-                <div class="p-4">
-                  <h4 class='mt-3'>{{ $sala->nome }}</h4>
-                  <p>{!! \Illuminate\Support\Str::limit($sala->descricao, 100, '...') !!}</p>
-                  <a href="{{ route('site.sala.detalhes', $sala->id) }}" class="about-btn">Ver Detalhes e Reservar <i class="bx bx-chevron-right"></i></a>
-                </div>
-               
-              </div>
-            </div>
-          @endforeach
-        </div>
+      
       </div>
     </section>
 

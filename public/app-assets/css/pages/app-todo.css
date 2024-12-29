@@ -25,7 +25,7 @@
 .todo-application .content-area-wrapper .sidebar .todo-sidebar .todo-app-menu .list-group .list-group-item {
   padding: 0.58rem 1.5rem;
   border: 0;
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: 0.4px;
   border-left: 2px solid transparent;
   border-radius: 0; }
@@ -35,10 +35,10 @@
 
 .todo-application .content-area-wrapper .sidebar .todo-sidebar .todo-app-menu .list-group .list-group-item:hover, .todo-application .content-area-wrapper .sidebar .todo-sidebar .todo-app-menu .list-group .list-group-item:focus, .todo-application .content-area-wrapper .sidebar .todo-sidebar .todo-app-menu .list-group .list-group-item.active {
   background: transparent;
-  color: #545e51; }
+  color: #5784a9; }
 
 .todo-application .content-area-wrapper .sidebar .todo-sidebar .todo-app-menu .list-group .list-group-item.active {
-  border-color: #545e51; }
+  border-color: #5784a9; }
 
 .todo-application .content-area-wrapper .ql-editor {
   padding-bottom: 0; }

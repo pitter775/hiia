@@ -20,7 +20,7 @@
  */
 .picker__month,
 .picker__year {
-  font-weight: 500;
+  font-weight: 400;
   display: inline-block;
   margin-left: .25em;
   margin-right: .25em;
@@ -153,7 +153,7 @@
   font-size: .75em;
   padding-bottom: .25em;
   color: #999;
-  font-weight: 500;
+  font-weight: 400;
   /* Increase the spacing a tad */
 }
 @media (min-height: 33.875em) {

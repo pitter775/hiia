@@ -11,11 +11,10 @@
         <div class="navbar-header mb-4" >
                 <ul class="nav navbar-nav flex-row">
                 <li class="nav-item mr-auto"><a class="navbar-brand" href="">
-                    <span class="brand-logo" style="margin-left: 6px">
-                         <img src="{{ asset('assets') }}/img/logoimg.png" style="height: 25px">
-                         {{-- <img src="{{ asset('assets') }}/img/logofinoescuro.png" style="height: 30px"> --}}
+                    <span style="margin-left: 6px">
+                         HiiA
                     </span>
-                        <h2 class="brand-text" style="font-size: 18px"><img src="{{ asset('assets') }}/img/logotexto.png" style="height: 11px"></h2>
+                        <h2 class="brand-text" style="font-size: 18px"></h2>
                     </a></li>
                 <li class="nav-item nav-toggle" style="margin-top: 3px"><a class="nav-link modern-nav-toggle pr-0" data-toggle="collapse"><i class="d-block d-xl-none text-primary toggle-icon font-medium-4" data-feather="x"></i><i class="d-none d-xl-block collapse-toggle-icon font-medium-4  text-primary" data-feather="disc" data-ticon="disc"></i></a></li>
             </ul>
@@ -33,17 +32,11 @@
                     </a>
                 </li>
                 
-                <li class="{{ $elementActive == 'salas' ? 'active' : '' }} nav-item">
-                    <a class="d-flex align-items-center" href="/admin/salas">
-                        <i data-feather='briefcase'></i><span class="menu-title text-truncate" data-i18n="Gerenciar Salas">Gerenciar Salas</span>
+                <li class="{{ $elementActive == 'modelos' ? 'active' : '' }} nav-item">
+                    <a class="d-flex align-items-center" href="/admin/modelos">
+                        <i data-feather='briefcase'></i><span class="menu-title text-truncate" data-i18n="Modelos">Atentende Chat</span>
                     </a>
-                </li>
-                
-                <li class="{{ $elementActive == 'reservas' ? 'active' : '' }} nav-item">
-                    <a class="d-flex align-items-center" href="/admin/reservas">
-                        <i data-feather='calendar'></i><span class="menu-title text-truncate" data-i18n="Reservas">Reservas</span>
-                    </a>
-                </li>
+                </li>                
                 
                 <li class="{{ $elementActive == 'usuarios' ? 'active' : '' }} nav-item">
                     <a class="d-flex align-items-center" href="/admin/usuarios">
@@ -64,7 +57,7 @@
                 
                     <li class="{{ $elementActive == 'minhas-reservas' ? 'active' : '' }} nav-item">
                         <a class="d-flex align-items-center" href="/cliente/reservas">
-                            <i data-feather='calendar'></i><span class="menu-title text-truncate" data-i18n="Minhas Reservas">Minhas Reservas</span>
+                            <i data-feather='calendar'></i><span class="menu-title text-truncate" data-i18n="Minhas Reservas">Meu Atendente</span>
                         </a>
                     </li>
 
@@ -73,13 +66,6 @@
                             <i data-feather='shield'></i><span class="menu-title text-truncate" data-i18n="Privacidade">Políticas de Privacidade</span>
                         </a>
                     </li>
-
-                    <li class="{{ $elementActive == 'salas' ? 'active' : '' }} nav-item">
-                        <a class="d-flex align-items-center" href="{{ route('site.index') }}#about" target="_blank">
-                            <i data-feather='grid'></i><span class="menu-title text-truncate" data-i18n="Salas">Ver Salas</span>
-                        </a>
-                    </li>
-
 
                 
             @endif

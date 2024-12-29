@@ -16,9 +16,12 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Espaço Equilibra Mente - Gestão</title>
+    <title>HiiA - Gestão</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     
     
     <!-- Styles -->
@@ -51,7 +54,7 @@
 
     <!-- BEGIN: Custom CSS-->
     <link rel="stylesheet" type="text/css" href="../../../assets/css/style.css">
-    <link rel="stylesheet" type="text/css" href="../../../assets/vendor/aos/aos.css')}}">
+    <link rel="stylesheet" type="text/css" href="../../../assets/vendor/aos/aos.css">
 
 
     
@@ -110,16 +113,7 @@
                 });
             }
         })
-
-        var useperfil = $('#use_perfilInput').val();
-
-        if (useperfil == 17) //supervisor
-        {
-            $(':input[type="submit"]').prop('disabled', true); 
-            $('#tabelaPiloto').prop('disabled', false); 
-            
-        }
-        
+       
 
         $.ajaxSetup({
             headers: {
@@ -138,46 +132,9 @@
 
     </script>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     
-    <script>
-        // Aplica a máscara após o carregamento completo do DOM
-        $(document).ready(function() {
-            $('#newUserModal').on('shown.bs.modal', function () {
-                $('#endereco_cep').mask('00000-000');
-                $('#telefone').mask('(00) 00000-0000');
-            });
 
-            $(document).on('click', '#btn-novo-endereco', function() {
-                $('#novo-endereco-form').toggle(); // Alterna a exibição do formulário de novo endereço
-                $('#endereco_cep').mask('00000-000');
-                $('#telefone').mask('(00) 00000-0000');
-            });
-
-            // Evento para buscar endereço quando o CEP é preenchido
-            $(document).on('blur', '#endereco_cep', function () {
-                let cep = $(this).val().replace(/\D/g, '');
-
-                if (cep.length === 8) {
-                    $.getJSON(`/api/cep/${cep}`, function (data) {
-                        if (!("erro" in data)) {
-                            $('#endereco_rua').val(data.logradouro);
-                            $('#endereco_bairro').val(data.bairro);
-                            $('#endereco_cidade').val(data.localidade);
-                            $('#endereco_estado').val(data.uf);
-                        } else {
-                            toastr.error("CEP não encontrado.");
-                        }
-                    }).fail(function() {
-                        toastr.error("Erro ao buscar o endereço. Tente novamente.");
-                    });
-                } else {
-                    toastr.warning("CEP inválido. Insira um CEP com 8 dígitos.");
-                }
-            });
-
-        });
-    </script>
     <script>
         const datatablesLangUrl = "{{ asset('assets/js/datatables-pt-br.json') }}";
     </script>

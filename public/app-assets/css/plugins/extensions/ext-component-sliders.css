@@ -38,13 +38,13 @@
   border: none;
   border-radius: 50%;
   background: #fff;
-  border: 2px solid #545e51; }
+  border: 2px solid #5784a9; }
 
 .noUi-handle:after, .noUi-handle:before {
   display: none; }
 
 .noUi-connect {
-  background: #545e51;
+  background: #5784a9;
   box-shadow: none; }
 
 .noUi-tooltip {
@@ -54,7 +54,7 @@
   color: #6e6b7b;
   background-color: #f8f8f8;
   padding: 0.1718rem 0.35rem;
-  font-weight: 500; }
+  font-weight: 400; }
 
 .noUi-vertical {
   display: inline-block;
