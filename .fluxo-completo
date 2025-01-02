@@ -1,0 +1,113 @@
+<?
+
+### Fluxo Completo do Chat com GPT
+
+#### **1. Criar Rota Pública para o Chat**
+Adicione uma rota no arquivo `web.php`:
+
+```php
+Route::get('/chat', [SiteController::class, 'showChat'])->name('chat');
+Route::post('/api/chat/send', [ChatController::class, 'sendMessage'])->name('api.chat.send');
+Route::get('/api/chat/start', [ChatController::class, 'startChat'])->name('api.chat.start');
+```
+
+#### **2. Criar Controladores**
+
+##### **Comandos Artisan**
+```bash
+php artisan make:controller SiteController
+php artisan make:controller ChatController
+```
+
+##### **SiteController**
+Adicione o método `showChat`:
+
+```php
+public function showChat(Request $request)
+{
+    $token = $request->query('token');
+    $modelo = Modelo::where('token', $token)->first();
+
+    if (!$modelo || !in_array($request->getHost(), explode(',', $modelo->allowed_domains))) {
+        abort(403, 'Acesso negado');
+    }
+
+    return view('chat.widget', ['modelo' => $modelo]);
+}
+```
+
+##### **ChatController**
+Adicione os métodos `startChat` e `sendMessage`:
+
+```php
+public function startChat(Request $request)
+{
+    $token = $request->query('token');
+    $modelo = Modelo::where('token', $token)->firstOrFail();
+
+    $chat = Chat::create([
+        'user_id' => $modelo->user_id,
+        'modelo_id' => $modelo->id,
+    ]);
+
+    return response()->json(['chat_id' => $chat->id]);
+}
+
+public function sendMessage(Request $request)
+{
+    $chat = Chat::findOrFail($request->chat_id);
+    $message = $request->message;
+
+    // Envia a mensagem para o GPT
+    $gptResponse = app(GPTService::class)->enviarMensagem($message);
+
+    // Salva no banco
+    Mensagem::create([
+        'chat_id' => $chat->id,
+        'conteudo' => $message,
+        'remetente' => 'cliente',
+    ]);
+
+    Mensagem::create([
+        'chat_id' => $chat->id,
+        'conteudo' => $gptResponse,
+        'remetente' => 'gpt',
+    ]);
+
+    return response()->json(['response' => $gptResponse]);
+}
+```
+
+#### **3. Criar View para o Widget**
+Crie o arquivo `resources/views/chat/widget.blade.php`:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - Hiia</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        #chat-box {
+            width: 100%;
+            height: 100vh;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <iframe id="chat-box" src="/api/chat/start?token={{ request('token') }}"></iframe>
+</body>
+</html>
+```
+
+#### **4. Testar o Fluxo**
+1. **Testar Rota Pública:** Acesse `/chat?token=SEU_TOKEN_AQUI`.
+2. **Enviar Mensagens:** Use `/api/chat/send` com o ID do chat.
+3. **Validar Domínios:** Certifique-se de que apenas os domínios permitidos acessam o chat.

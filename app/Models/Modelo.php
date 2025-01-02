@@ -4,28 +4,30 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Chat;
+use App\Models\User;
 
 class Modelo extends Model
 {
     use HasFactory;
-
-    // Define a tabela associada (caso não siga o padrão plural)
-    protected $table = 'modelos';
-
     // Permite preenchimento em massa nos seguintes campos
     protected $fillable = [
         'user_id',   // Relacionamento com o usuário
         'nome',      // Nome do modelo
         'descricao', // Descrição opcional
         'dados',     // Informações do modelo em JSON ou texto
-        'activated_at',
-        'chat_token',
-        'allowed_domains',
+        'allowed_domains', // Domínios permitidos para uso
+        'activated_at', // Domínios permitidos para uso
+        'token', // Domínios permitidos para uso
     ];
 
-    // Relacionamento com o usuário (opcional)
-    public function user()
-    {
+    // Relacionamento com o usuário
+    public function user() {
         return $this->belongsTo(User::class);
+    }
+
+    // Relacionamento com chats
+    public function chats() {
+        return $this->hasMany(Chat::class);
     }
 }

@@ -9,7 +9,9 @@ use App\Http\Controllers\admin\UsuarioController;
 use App\Http\Controllers\ImagemSalaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CepController;
-use App\Services\GPTService;
+use App\Http\Controllers\ChatController;
+
+
 
 
 use OpenAI\Laravel\Facades\OpenAI;
@@ -27,17 +29,18 @@ Route::get('/test-openai', function () {
     return response()->json($response->choices[0]->message->content);
 });
 
+Route::get('/chat', [SiteController::class, 'showChat'])->name('chat');
+Route::post('/api/chat/send', [ChatController::class, 'sendMessage'])->name('api.chat.send');
+Route::get('/api/chat/start', [ChatController::class, 'startChat'])->name('api.chat.start');
+
+
+
+// Teste funcionando atualmente
 // Route::get('/testar-gpt', function () {
 //     $gpt = new GPTService();
 //     $resposta = $gpt->enviarMensagem('Olá, GPT! Pode me explicar o que é Laravel?');
 //     return $resposta;
 // });
-
-
-
-
-
-
 
 
 

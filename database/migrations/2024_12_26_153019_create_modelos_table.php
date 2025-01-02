@@ -16,14 +16,13 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('nome');
-            $table->string('model_identifier')->unique()->nullable();
             $table->text('descricao')->nullable();
-            $table->json('dados'); // Informações do modelo            
-            $table->timestamp('activated_at')->nullable();
-            $table->uuid('chat_token')->nullable();
-            $table->text('allowed_domains')->nullable();
+            $table->text('allowed_domains')->nullable(); // Domínios permitidos para uso
+            $table->json('dados')->nullable(); // Dados otimizados para personalização e performance
+            $table->string('token')->unique();
+            $table->timestamp('activated_at')->nullable(); // Indica quando o modelo foi ativado
             $table->timestamps();
-    
+        
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }

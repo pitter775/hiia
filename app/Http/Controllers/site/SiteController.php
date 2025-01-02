@@ -6,9 +6,23 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Reserva;
 use App\Models\Sala;
+use App\Models\Modelo;
 
 class SiteController extends Controller
 {
+
+    public function showChat(Request $request)
+    {
+        $token = $request->query('token');
+        $modelo = Modelo::where('token', $token)->first();
+
+        if (!$modelo || !in_array($request->getHost(), explode(',', $modelo->allowed_domains))) {
+            abort(403, 'Acesso negado');
+        }
+
+        return view('chat.widget', ['modelo' => $modelo]);
+    }
+
     public function index()
     {
         $salas = null;

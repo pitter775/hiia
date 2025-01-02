@@ -32,6 +32,16 @@
   <link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/extensions/toastr.min.css">
   <link href="{{ asset('assets') }}/css/style.css" rel="stylesheet">
 
+<script>
+// Chat inteligente fornecido por Hiia
+(function () {
+    const script = document.createElement('script');
+    script.src = `http://127.0.0.1:8000/js/chat-widget.js?token=SEU_TOKEN_AQUI`;
+    script.async = true;
+    document.head.appendChild(script);
+})();
+</script>
+
 </head>
 
 <body>

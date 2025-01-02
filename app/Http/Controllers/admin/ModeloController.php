@@ -21,10 +21,12 @@ class ModeloController extends Controller
     // Salvar Rascunho
     public function saveDraft(Request $request)
     {
-        $request->validate([
-            'nome' => 'required|string|max:255',
-            'descricao' => 'nullable|string',
-            'dados' => 'required|array',
+        $modelo = Modelo::create([
+            'user_id' => auth()->id(),
+            'nome' => $request->nome,
+            'descricao' => $request->descricao,
+            'dados' => json_encode($request->dados),
+            'token' => Str::uuid(), // Gera um token único
         ]);
     
         // Verifica se já existe um rascunho para o usuário
@@ -200,7 +202,7 @@ class ModeloController extends Controller
         $modelo->update([
             'dados' => json_encode($dados),
             'activated_at' => now(),
-            'chat_token' => Str::uuid(),
+            'token' => $modelo->token ?? Str::uuid(), // Garante que o token seja gerado se ainda não existir
             'model_identifier' => $modelIdentifier, // Salva o identificador único
         ]);
     
@@ -209,7 +211,7 @@ class ModeloController extends Controller
             'estado' => 'Ativo',
             'activated_at' => $modelo->activated_at,
             'conteudo_gerado' => $conteudoGerado,
-            'chat_token' => $modelo->chat_token,
+            'token' => $modelo->token,
             'model_identifier' => $modelIdentifier,
         ], 200);
     }
