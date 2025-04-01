@@ -17,6 +17,11 @@
     },
     "dependencies": {
         "@fullcalendar/core": "^6.1.15",
-        "@fullcalendar/daygrid": "^6.1.15"
+        "@fullcalendar/daygrid": "^6.1.15",
+        "bootstrap": "^5.3.3",
+        "jquery": "^3.7.1",
+        "lodash": "^4.17.21",
+        "popper.js": "^1.16.1",
+        "vue": "^3.5.13"
     }
 }

@@ -6,6 +6,39 @@
 @if(session('success'))
     <p style="color: green;">{{ session('success') }}</p>
 @endif
+<style>
+    #cropContainer {
+        width: 300px;
+        height: 300px;
+        margin: 20px auto;
+        overflow: hidden;
+        border: 1px solid #ccc;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+
+
+<div class="modal" id="modalCorteImagem" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cortar Imagem</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body row">
+        <img id="previewImagem" style="max-width: 100%; display: block;" />
+      </div>
+      <div class="modal-footer">
+        <button id="confirmarCorte" class="btn btn-primary">Confirmar</button>
+        <button class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <div class="">
@@ -28,6 +61,27 @@
                 <div class="row">
                     <!-- Basic Tables start -->
                     <div class="col-lg-8 col-12 order-1 order-lg-2">
+                        <div class="card cardcodigo" style='display:none'>
+                            <div class="card-body">
+                                <div class="profile-user-info mb-2">
+                                    <h5 class="mb-0">Código de acesso</h5>
+                                    <small class="text-muted">Copie e cole este código no seu projeto.</small>
+                                </div>
+                                <pre id="codigoProjeto" class="language-html" style="background-color:rgb(248, 249, 250); padding: 10px; border-radius: 5px; overflow-x: auto;">
+                                    &lt;script&gt;
+                                    (function () {
+                                        const token = 'SEU_TOKEN_AQUI'; // Certifique-se de usar o token correto
+                                        const script = document.createElement('script');
+                                        script.src = `http://127.0.0.1:8000/js/chat-widget.js?token=SEU_TOKEN_AQUI`;
+                                        script.async = true;
+                                        document.head.appendChild(script);
+                                    })();
+                                    &lt;/script&gt;
+                                </pre>
+                                <button id="copiarCodigo" class="btn btn-primary mt-2">Copiar Código</button>
+                            </div>
+                        </div>
+
                         <!-- post 1 -->
                         <div class="card">
                             <div class="card-body">
@@ -36,7 +90,7 @@
                                     
                                         <!--/ avatar -->
                                         <div class="profile-user-info">
-                                            <h5 class="mb-0">Criando Atendente</h5>
+                                            <h5 class="mb-0">Configurando Atendente</h5>
                                             <small class="text-muted">Todos os dados inseridos são privados.</small>
                                         </div>
                                     </div>
@@ -44,16 +98,28 @@
                                         configure os detalhes do treinamento e personalize o conteúdo conforme as necessidades do seu negócio.
                                         Esse modelo será a base para orientar o atendimento e melhorar a experiência dos usuários.</p>
 
-                                    <p>Cada modelo pode conter até <strong>1.000 palavras</strong>. 
-                                        Recomendamos ser claro e objetivo para que o atendimento seja eficaz. 
-                                        Caso precise incluir mais informações, ajuste o conteúdo para manter-se dentro do limite.
-                                    </p>
+                                    <hr>
                                     <div class="row">
-                                        <div class="form-group mb-2 col-lg-5 col-12 order-4 ">
-                                            <label for="nome">Nome do Modelo de Atendimento</label>
-                                            <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome">
+                                    
+                                        <div style="text-align: center; margin: 20px;">
+                                                <label for="imagemAtendente" style="cursor: pointer;">
+                                                    <img 
+                                                        id="imagemAvatar" 
+                                                        src="{{ asset('assets/img/semfoto.jpg') }}" 
+                                                        alt="Avatar" 
+                                                        style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;"
+                                                    />
+                                                </label>
+                                            </div>
+                                            <input type="file" id="imagemAtendente" accept="image/*" style="display: none;" />
+                                            <input type="hidden" id="imagemFinal" />
+                                        
+                                            <div class="form-group mt-2 col-lg-5 col-12 order-4 ">
+                                                <label for="nome">Nome do Modelo de Atendimento</label>
+                                                <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome">
+                                            </div>
                                         </div>
-                                    </div>
+                            
                                     <!-- comment box -->
                                     <label for="descricao ">Descrição</label>
                                     <fieldset class="form-label-group mb-75">
@@ -82,7 +148,13 @@
                                 </form>
                             </div>
                         </div>
+
+
+
                     </div>
+
+
+
                     <!-- Basic Tables end -->
 
                      <!-- right profile info section -->
@@ -104,7 +176,7 @@
                                 <p class="mb-0"> <strong> Modelo Criado:</strong>  <span id="nomeModelo"> __</span> </p>
                                 <p class="mb-0"> <strong> Estado:</strong>  <span id="estadoModelo"> __</span> </p>
                                 <p class="mb-0"> <strong> Data Rascunho:</strong>  <span id="dataRascunho"> __</span> </p>
-                                <p class="mb-0"> <strong> Data Ativo:</strong>  <span id="dataAtivo"> __</span> </p>
+                                <p class="mb-0"> <strong> Data Atualizado:</strong>  <span id="dataAtivo"> __</span> </p>
 
                                 <hr>
                                 
@@ -113,6 +185,10 @@
                                
                             </div>
                         </div>
+
+
+
+
 
                         <div class="card">
                             <div class="card-body">                         
@@ -166,10 +242,7 @@
 @endsection
 
 @push('css_vendor')
-    <link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/datatable/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/datatable/responsive.bootstrap4.min.css">
-    <link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/datatable/buttons.bootstrap4.min.css">
-    <link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/tables/datatable/rowGroup.bootstrap4.min.css">
+
     <link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/pickers/flatpickr/flatpickr.min.css">
     <link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/forms/select/select2.min.css">   
     <link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/pickers/pickadate/pickadate.css">  
@@ -185,35 +258,39 @@
     <link rel="stylesheet" type="text/css" href="../../../app-assets/css/plugins/forms/pickers/form-flat-pickr.css">
     <link rel="stylesheet" type="text/css" href="../../../app-assets/css/plugins/forms/pickers/form-pickadate.css">
     <link rel="stylesheet" type="text/css" href="../../../app-assets/css/plugins/forms/form-validation.css">
-        <link rel="stylesheet" type="text/css" href="../../../app-assets/css/plugins/extensions/ext-component-toastr.css">
+    <link rel="stylesheet" type="text/css" href="../../../app-assets/css/plugins/extensions/ext-component-toastr.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-solarizedlight.min.css" rel="stylesheet">
+    
+    <!-- Dropzone CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" />
+
+    <!-- Cropper.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
+
+
+
 @endpush
 
 @push('js_page')
-    <script src="../../../app-assets/vendors/js/forms/validation/jquery.validate.min.js"></script>
-    
-    <script src="../../../app-assets/vendors/js/tables/datatable/jquery.dataTables.min.js"></script>
-    <script src="../../../app-assets/vendors/js/tables/datatable/datatables.bootstrap4.min.js"></script>
-    <script src="../../../app-assets/vendors/js/tables/datatable/dataTables.responsive.min.js"></script>
-    <script src="../../../app-assets/vendors/js/tables/datatable/responsive.bootstrap4.js"></script>
-    <script src="../../../app-assets/vendors/js/tables/datatable/datatables.checkboxes.min.js"></script> 
-    <script src="../../../app-assets/vendors/js/tables/datatable/datatables.buttons.min.js"></script>
-    <script src="../../../app-assets/vendors/js/tables/datatable/jszip.min.js"></script>
-    <script src="../../../app-assets/vendors/js/tables/datatable/vfs_fonts.js"></script>
-    <script src="../../../app-assets/vendors/js/tables/datatable/buttons.html5.min.js"></script>
-    <script src="../../../app-assets/vendors/js/tables/datatable/buttons.print.min.js"></script>
-    <script src="../../../app-assets/vendors/js/tables/datatable/dataTables.rowGroup.min.js"></script>
-    
-    
     <script src="../../../app-assets/js/scripts/forms/form-select2.js"></script> 
     <script src="../../../app-assets/js/scripts/extensions/ext-component-sweet-alerts.js"></script>
     <script src="../../../app-assets/js/scripts/forms/pickers/form-pickers.js"></script>
-
     <script src="../../../app-assets/js/scripts/pages/app-modelo-chat.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-html.min.js"></script> 
+    <!-- Dropzone.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
+
+    <!-- Cropper.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+
 @endpush
 
 @push('js_vendor')
-    <script src="../../../app-assets/vendors/js/forms/select/select2.full.min.js"></script>
-    
+    <script src="../../../app-assets/vendors/js/forms/select/select2.full.min.js"></script>    
     
     <script src="../../../app-assets/vendors/js/extensions/polyfill.min.js"></script>
     <script src="../../../app-assets/vendors/js/pickers/pickadate/picker.js"></script>
@@ -221,8 +298,14 @@
     <script src="../../../app-assets/vendors/js/pickers/pickadate/picker.time.js"></script>
     <script src="../../../app-assets/vendors/js/pickers/pickadate/legacy.js"></script>
     <script src="../../../app-assets/vendors/js/pickers/flatpickr/flatpickr.min.js"></script>
+
+
     
 @endpush
+
+
+
+
 
 
 

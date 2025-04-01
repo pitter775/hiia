@@ -32,17 +32,41 @@
   <link rel="stylesheet" type="text/css" href="../../../app-assets/vendors/css/extensions/toastr.min.css">
   <link href="{{ asset('assets') }}/css/style.css" rel="stylesheet">
 
-<script>
-// Chat inteligente fornecido por Hiia
-(function () {
-    const script = document.createElement('script');
-    script.src = `http://127.0.0.1:8000/js/chat-widget.js?token=SEU_TOKEN_AQUI`;
-    script.async = true;
-    document.head.appendChild(script);
-})();
-</script>
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <style>
+  
+
+  </style>
+
+
+
+      <script>
+        // Atendente inteligente fornecido por Hiia
+        (function () {
+            const script = document.createElement('script');
+            script.src = `http://127.0.0.1:8000/js/chat-widget.js?token=0679d574-58b8-4848-ae52-90d9b9b386f6`; 
+            script.async = true;
+            document.head.appendChild(script);
+        })();
+        </script>
 
 </head>
+{{-- <style>
+
+  @keyframes moveLeft {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  #meu-modelo {
+    animation: moveLeft 3s ease-out;
+  }
+
+</style> --}}
 
 <body>
 
@@ -50,8 +74,8 @@
   <header id="header" class="fixed-top header-transparent">
     <div class="container d-flex align-items-center hero-content">
 
-      <div class="logo mr-auto">
-        <a href="/">HiiA</a>
+      <div class="logo mr-auto" style="color: #fff">
+       <img src="{{ asset('assets') }}/img/favicon.png" alt="" class="mr-2" style="float:left">  hiia
       </div>
 
       <nav class="nav-menu d-none d-lg-block">
@@ -77,28 +101,94 @@
     </div>
   </header><!-- End Header -->
 
-  <!-- ======= Hero Section ======= -->
-  <section id="hero">
-    <div class="hero-container" data-aos="fade-up">
-      <h1>Um super atendente em constante evolução<br> para o seu site e suas vendas!</h1>
-      <h2>Tenha um atendente sempre disponivel, que conhece tudo sobre<br> o seu negócio e ter em seu site é muito simples,  após ensinar a HiiA <br> o atendente já vai estar pronto.</h2>
-      <a href="#about" class="btn-get-started scrollto"><i class="bx bx-chevrons-down"></i></a>
-    </div>
-  </section><!-- End Hero -->
 
   <main id="main">
 
+
+<style>
+
+
+    .about::before  { 
+          width: 100% !important;
+    height: 500px;
+
+    padding: 0;
+    margin: 0;
+
+     }
+
+  #about {
+      width: 100% !important;
+      height: 500px;
+      background: rgba(2, 9, 19, 1) url('/assets/img/bg-inicio.png') no-repeat center bottom !important;
+      background-size: cover; /* Faz a imagem cobrir todo o espaço */
+      padding: 0;
+      margin: 0;
+    }
+  .banneranimadopai {
+    width: 100%;
+    height: 500px;
+    position: relative; /* Define o contêiner como referência para posicionamento absoluto */
+    overflow: hidden; /* Garante que nada saia dos limites do contêiner */
+  }
+
+  .banneranimado {
+    width: 100%;
+    height: 500px;
+    background:url('/assets/img/bg-foguete.png') no-repeat center bottom;
+    background-size: auto;
+    position: absolute; /* Permite posicionamento dentro do pai */
+    bottom: 0; /* Alinha ao limite inferior do pai */
+    z-index: 1; /* Coloca a imagem atrás da cena */
+opacity: 0; transition: opacity 1s ease-in-out;
+  }
+
+  a-scene {
+    position: absolute;
+    background: transparent;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 500px;
+    z-index: 2; /* Garante que a cena fique por cima */
+  }
+  
+  </style>
+
     <!-- ======= About Section ======= -->
     <section id="about" class="about">
-      <div class="container">
-        <div class="row no-gutters">
-          <div class="content col-xl-12 d-flex align-items-stretch" data-aos="fade-up">
-            <div class="content">
-              <h3>Nossas Unidades</h3>
-              <p>Descubra o espaço perfeito para o seu próximo evento, reunião ou atendimento. Oferecemos salas modernas e bem equipadas, projetadas para atender às suas necessidades profissionais, sejam elas pequenas reuniões, sessões individuais ou workshops. Confira as opções disponíveis e encontre o ambiente ideal para você e seus clientes.</p>
-            </div>
-          </div>
-        </div>
+      <div class="container banneranimadopai" >
+      
+      <div class="banneranimado">
+      </div>
+
+        <a-scene embedded vr-mode-ui="enabled: false" renderer="alpha: true">
+                
+          <!-- Luz ambiente -->
+          <a-light type="ambient" color="#ffffff" intensity="0.5"></a-light>
+          
+          <!-- Luz direcional -->
+          <a-light type="directional" color="#ffffff" intensity="1" position="5 5 5"></a-light>
+
+          <!-- Modelo 3D com animações e transparência -->
+          <a-entity 
+            id="rocket" 
+            gltf-model="{{ asset('assets/models/low_poly_rocket.glb') }}"
+            position="20 0 0" 
+            rotation="90 180 -90" 
+            scale="0 0 0" 
+            
+            animation__move1="property: position; to: 0 0 0; dur: 2800; easing: easeInOutSine; startEvents: start-move"
+            animation__scale1="property: scale; to: 1.6 1.6 1.6; dur: 2800; easing: easeInOutSine; startEvents: start-move"
+            animation__rotate="property: rotation; to: 0 180 0; dur: 1000; easing: easeInOutSine; startEvents: start-rotate">
+            {{-- animation__move2="property: position; to: 0 15 0; dur: 1200; easing: easeInOutSine; startEvents: start-move2"
+            animation__scale2="property: scale; to: 0 0 0; dur: 900; easing: easeInOutSine; startEvents: start-move2"> --}}
+          </a-entity>
+
+
+          <!-- Câmera -->
+          <a-camera position="0 1.6 10" rotation="0 -90 0"></a-camera>
+        </a-scene>
 
       
       </div>
@@ -111,18 +201,18 @@
     <section id="sobre" class="testimonials section-bg">
       <div class="container">
 
-        <div class=" mb-5" data-aos="fade-in" data-aos-delay="100">
+        <div class=" mb-5">
 
           <h3>Sobre Nós</h3>   
           <p class="mb-5">Somos uma empresa dedicada a oferecer espaços modernos, práticos e confortáveis para profissionais e empresas que buscam ambientes ideais para atender seus clientes ou realizar reuniões e eventos. Nosso objetivo é criar uma experiência única, onde cada detalhe foi pensado para proporcionar funcionalidade e bem-estar. <br>
 
-Com salas totalmente equipadas, flexibilidade de horários e localização estratégica, atendemos às necessidades de psicólogos, terapeutas, coaches, empresários e diversos outros profissionais. Seja para um atendimento individual, um workshop ou uma reunião corporativa, aqui você encontra o ambiente perfeito para alcançar seus objetivos.<br>
+            Com salas totalmente equipadas, flexibilidade de horários e localização estratégica, atendemos às necessidades de psicólogos, terapeutas, coaches, empresários e diversos outros profissionais. Seja para um atendimento individual, um workshop ou uma reunião corporativa, aqui você encontra o ambiente perfeito para alcançar seus objetivos.<br>
 
-Nossa missão é simplificar sua rotina e oferecer o suporte que você precisa para focar no que realmente importa: seus clientes e negócios.
+            Nossa missão é simplificar sua rotina e oferecer o suporte que você precisa para focar no que realmente importa: seus clientes e negócios.
 
-Venha conhecer nossas salas e transforme seu dia a dia profissional com um espaço feito para você!</p>
+            Venha conhecer nossas salas e transforme seu dia a dia profissional com um espaço feito para você!</p>
 
-<hr>
+            <hr>
 
           <h3 class="mt-5">O que dizem do nossos espaço</h3>     
           <p>Nossos espaços foram cuidadosamente planejados para atender às necessidades de profissionais das mais diversas áreas, como psicólogos, terapeutas, coaches, e muitos outros. Aqui, cada detalhe foi pensado para garantir conforto, praticidade e um ambiente profissional. Veja o que alguns de nossos parceiros têm a dizer sobre suas experiências:</p>
@@ -250,7 +340,7 @@ Venha conhecer nossas salas e transforme seu dia a dia profissional com um espa�
   
   <!-- End Footer -->
 
-  <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
+  {{-- <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a> --}}
 
   <!-- Vendor JS Files -->
   <script src="{{ asset('assets') }}/vendor/jquery/jquery.min.js"></script>
@@ -267,6 +357,48 @@ Venha conhecer nossas salas e transforme seu dia a dia profissional com um espa�
 
   <!-- Template Main JS File -->
   <script src="{{ asset('assets') }}/js/main.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script> <!-- aframe-extras -->
+  
+  
+
+  <script>
+    const rocket = document.getElementById('rocket');
+        // Impede interações com o modelo
+      rocket.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        console.log('Interação bloqueada');
+      });
+
+        // Inicia o movimento e a escala simultaneamente
+        rocket.emit('start-move');
+
+        // Dispara a rotação quando 75% do movimento for concluído
+      setTimeout(() => {
+        rocket.emit('start-rotate'); // Inicia a rotação para ficar em pé
+        
+        // Inicia rotação contínua após a rotação inicial
+        setTimeout(() => {
+          rocket.setAttribute('animation__spin', {
+            property: 'rotation',
+            to: '0 -180 0',
+            loop: true,
+            dur: 15000, // Duração de uma rotação completa
+            easing: 'easeInOutQuad'
+          });
+        }, 1000); // Ajuste conforme necessário
+
+        setTimeout(() => {
+          const banner = document.querySelector('.banneranimado');
+          banner.style.opacity = .8; // Torna o banner visível suavemente
+        }, 900);
+
+      }, 1900);
+
+          
+
+  </script>
 
 </body>
 

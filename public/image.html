@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Upload com Corte</title>
+
+    <!-- Dropzone CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" />
+
+    <!-- Cropper.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
+
+    <style>
+        #cropModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        img {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Teste de Upload com Corte</h1>
+    
+    <!-- Dropzone Form -->
+    <form action="/fake-upload-url" class="dropzone" id="dropzoneForm"></form>
+
+    <!-- Modal de Corte -->
+    <div id="overlay"></div>
+    <div id="cropModal">
+        <h2>Edite a Imagem</h2>
+        <img id="cropImage" />
+        <button id="cropAndUpload" class="btn btn-primary">Cortar e Enviar</button>
+    </div>
+
+    <!-- Dropzone.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
+
+    <!-- Cropper.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+    <script>
+        Dropzone.autoDiscover = false;
+
+        const dropzone = new Dropzone("#dropzoneForm", {
+            url: "/fake-upload-url", // URL fake, pois o envio será manual após o corte
+            autoProcessQueue: false,
+            acceptedFiles: "image/*",
+            init: function () {
+                this.on("addedfile", function (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (event) {
+                        const cropImage = document.getElementById("cropImage");
+                        cropImage.src = event.target.result;
+
+                        // Inicializar o Cropper.js
+                        const cropper = new Cropper(cropImage, {
+                            aspectRatio: 1, // Quadrado
+                            viewMode: 1,
+                        });
+
+                        // Exibir o modal
+                        document.getElementById("overlay").style.display = "block";
+                        document.getElementById("cropModal").style.display = "block";
+
+                        // Botão para cortar e enviar
+                        document.getElementById("cropAndUpload").addEventListener("click", function () {
+                            const canvas = cropper.getCroppedCanvas({
+                                width: 300,
+                                height: 300,
+                            });
+
+                            canvas.toBlob(function (blob) {
+                                const formData = new FormData();
+                                formData.append("imagem", blob, "imagem_cortada.jpg");
+
+                                // Enviar a imagem para o backend
+                                fetch("/upload", {
+                                    method: "POST",
+                                    body: formData,
+                                })
+                                    .then((response) => response.json())
+                                    .then((data) => {
+                                        alert("Imagem enviada com sucesso!");
+                                        document.getElementById("overlay").style.display = "none";
+                                        document.getElementById("cropModal").style.display = "none";
+                                    })
+                                    .catch((error) => {
+                                        console.error("Erro ao enviar a imagem:", error);
+                                    });
+                            });
+                        });
+                    };
+
+                    reader.readAsDataURL(file);
+                });
+            },
+        });
+    </script>
+
+</body>
+</html>

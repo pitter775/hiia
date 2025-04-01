@@ -48,19 +48,11 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    /**
-     * Relacionamento com reservas
-     */
-
-    // Relacionamento com mensagens
-    public function mensagens() {
-        return $this->hasMany(Mensagem::class);
-    }
-
-    // Relacionamento com chats
-    public function chats() {
-        return $this->belongsToMany(Chat::class, 'chat_usuarios');
-    }
+   // Relacionamento com modelos
+   public function modelos()
+   {
+       return $this->hasMany(Modelo::class);
+   }
     
 }
 

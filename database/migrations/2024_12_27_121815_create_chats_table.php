@@ -13,14 +13,11 @@ return new class extends Migration
     {
         Schema::create('chats', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+
             $table->unsignedBigInteger('modelo_id');
-            $table->text('mensagem_usuario'); // Mensagem enviada pelo usuário
-            $table->text('resposta_gpt'); // Resposta gerada pelo GPT
             $table->timestamps();
 
             // Relacionamentos
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('modelo_id')->references('id')->on('modelos')->onDelete('cascade');
         });
     }

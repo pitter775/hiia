@@ -30,8 +30,7 @@ Route::get('/test-openai', function () {
 });
 
 Route::get('/chat', [SiteController::class, 'showChat'])->name('chat');
-Route::post('/api/chat/send', [ChatController::class, 'sendMessage'])->name('api.chat.send');
-Route::get('/api/chat/start', [ChatController::class, 'startChat'])->name('api.chat.start');
+
 
 
 
@@ -79,6 +78,9 @@ Route::post('/completar-cadastro', [UsuarioController::class, 'completarCadastro
 // Requisição de busca por CEP
 Route::get('/api/cep/{cep}', [CepController::class, 'buscarCep']);
 
+
+
+
 // Rotas para clientes (somente após autenticação)
 Route::middleware(['auth'])->group(function () {
     Route::get('/cliente', [ReservaClienteController::class, 'minhasReservas'])->name('cliente.index');
@@ -93,12 +95,15 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Rotas para Modelos
     Route::get('/admin/modelos', [ModeloController::class, 'index'])->name('admin.modelos');
     Route::get('/admin/modelos/rascunho', [ModeloController::class, 'getDraft'])->name('modelos.rascunho');
-    Route::post('/admin/modelos/rascunho', [ModeloController::class, 'saveDraft'])->name('modelos.rascunho');
+    // Route::post('/admin/modelos/rascunho', [ModeloController::class, 'saveDraft'])->name('modelos.rascunho');
+    Route::match(['POST', 'PUT'], '/admin/modelos/rascunho', [ModeloController::class, 'saveDraft'])->name('modelos.rascunho');
+
     Route::post('/admin/modelos/criar', [ModeloController::class, 'store'])->name('modelos.criar');
     Route::post('/admin/modelos/ativar', [ModeloController::class, 'activate'])->name('modelos.ativar');
     Route::get('/admin/modelos/dominios', [ModeloController::class, 'getAllowedDomains'])->name('modelos.dominios');
     Route::post('/admin/modelos/dominios/adicionar', [ModeloController::class, 'addDomain'])->name('modelos.add_domain');
     Route::post('/admin/modelos/dominios/remover', [ModeloController::class, 'removeDomain'])->name('modelos.remove_domain');
+    Route::post('/admin/modelos/upload-imagem', [ModeloController::class, 'uploadImagem'])->name('modelos.uploadImagem');
 
 
 

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('nome');
             $table->text('descricao')->nullable();
+            $table->string('imagem')->nullable();
             $table->text('allowed_domains')->nullable(); // Domínios permitidos para uso
             $table->json('dados')->nullable(); // Dados otimizados para personalização e performance
             $table->string('token')->unique();

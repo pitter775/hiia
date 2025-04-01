@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use OpenAI\Laravel\Facades\OpenAI;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+
 
 class ModeloController extends Controller
 {
@@ -17,46 +20,61 @@ class ModeloController extends Controller
         return view('admin.modelos.index', compact('modelos'));
     }
 
+    public function uploadImagem(Request $request)
+    {
+        $request->validate([
+            'imagem' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+    
+        $path = $request->file('imagem')->store('public/atendentes');
+    
+        // Remover 'public/' do caminho para usar com Storage::url()
+        $path = str_replace('public/', '', $path);
+        $modelo = Modelo::where('user_id', auth()->id())->first();
+        // Atualizar o modelo no banco de dados
+        // $modelo = Modelo::find($request->id); // Certifique-se de que o ID do modelo é enviado no request
+        if ($modelo) {
+            $modelo->imagem = $path;
+            $modelo->save();
+        }
+    
+        return response()->json([
+            'success' => true,
+            'caminho' => Storage::url($path) // Retorna URL pública da imagem
+        ]);
+    }
+    
+    
+
 
     // Salvar Rascunho
     public function saveDraft(Request $request)
     {
-        $modelo = Modelo::create([
-            'user_id' => auth()->id(),
-            'nome' => $request->nome,
-            'descricao' => $request->descricao,
-            'dados' => json_encode($request->dados),
-            'token' => Str::uuid(), // Gera um token único
-        ]);
-    
-        // Verifica se já existe um rascunho para o usuário
-        $modelo = Modelo::where('user_id', auth()->id())
-            // ->where('dados->estado', 'Rascunho')
-            ->latest()
-            ->first();
+        $modelo = Modelo::where('user_id', auth()->id())->latest()->first();
     
         if ($modelo) {
-            // Atualiza o rascunho existente
             $modelo->update([
                 'nome' => $request->nome,
                 'descricao' => $request->descricao,
                 'dados' => json_encode($request->dados),
             ]);
     
-            return response()->json(['nome' => $modelo->nome], 200);
+            return response()->json(['nome' => $modelo->nome, 'token' => $modelo->token, 'estado' => 'Rascunho atualizado'], 200);
         }
     
-        // Cria um novo rascunho se não existir
         $modelo = Modelo::create([
             'user_id' => auth()->id(),
             'nome' => $request->nome,
             'descricao' => $request->descricao,
             'dados' => json_encode($request->dados),
+            'token' => Str::uuid(),
         ]);
     
-        return response()->json(['nome' => $modelo->nome, 'estado' => 'Rascunho'], 200);
+        return response()->json(['nome' => $modelo->nome, 'token' => $modelo->token, 'estado' => 'Novo rascunho criado'], 200);
     }
-
+    
+    
+    
 
     // Verificar se já existe um rascunho
     public function getDraft()
@@ -73,6 +91,8 @@ class ModeloController extends Controller
                 'descricao' => $modelo->descricao,
                 'estado' => $dados['estado'] ?? '--', // Busca o estado do JSON
                 'updated_at' => $modelo->updated_at,
+                'token' => $modelo->token,
+                'imagem' => $modelo->imagem,
                 'activated_at' => $modelo->activated_at,
             ], 200);
         }
@@ -89,7 +109,7 @@ class ModeloController extends Controller
     public function addDomain(Request $request)
     {
         $request->validate([
-            'domain' => 'required|string|regex:/^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
+            'domain' => 'required',
         ]);
 
         $modelo = Modelo::where('user_id', auth()->id())
@@ -179,6 +199,7 @@ class ModeloController extends Controller
     
         // Gerar identificador único baseado no nome
         $modelIdentifier = Str::slug($modelo->nome, '_') . '_' . Str::random(6);
+
     
         // Criar conteúdo no GPT
         $response = OpenAI::chat()->create([

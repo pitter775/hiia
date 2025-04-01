@@ -14,16 +14,9 @@ class Chat extends Model
     
     // Permite preenchimento em massa nos seguintes campos
     protected $fillable = [
-        'user_id',        // Relacionamento com o usuário
+        
         'modelo_id',      // Relacionamento com o modelo
-        'mensagem_usuario', // Mensagem enviada pelo usuário
-        'resposta_gpt',   // Resposta gerada pelo GPT
     ];
-
-    // Relacionamento com o usuário
-    public function user() {
-        return $this->belongsTo(User::class);
-    }
 
     // Relacionamento com o modelo
     public function modelo() {

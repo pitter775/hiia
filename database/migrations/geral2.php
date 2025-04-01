@@ -33,7 +33,6 @@ Schema::create('chats', function (Blueprint $table) {
 Schema::create('mensagens', function (Blueprint $table) {
     $table->id();
     $table->foreignId('chat_id')->constrained('chats')->onDelete('cascade');
-    $table->foreignId('usuario_id')->constrained('users')->onDelete('cascade');
     $table->text('conteudo');
     $table->enum('remetente', ['cliente', 'gpt']); // Diferencia quem enviou a mensagem
     $table->timestamp('enviado_em')->useCurrent();
