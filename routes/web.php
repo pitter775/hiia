@@ -10,11 +10,17 @@ use App\Http\Controllers\ImagemSalaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CepController;
 use App\Http\Controllers\ChatController;
-
-
-
-
+use App\Http\Controllers\admin\InstagramContaController;
+use App\Http\Controllers\InstagramWebhookController;
 use OpenAI\Laravel\Facades\OpenAI;
+
+
+//integracao instagram facebook
+
+
+Route::get('/webhook/meta', [InstagramWebhookController::class, 'verificar']);
+Route::post('/webhook/meta', [InstagramWebhookController::class, 'receber']);
+
 
 Route::get('/test-openai', function () {
     $response = OpenAI::chat()->create([
@@ -28,6 +34,8 @@ Route::get('/test-openai', function () {
 
     return response()->json($response->choices[0]->message->content);
 });
+
+
 
 Route::get('/chat', [SiteController::class, 'showChat'])->name('chat');
 
@@ -104,6 +112,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/admin/modelos/dominios/adicionar', [ModeloController::class, 'addDomain'])->name('modelos.add_domain');
     Route::post('/admin/modelos/dominios/remover', [ModeloController::class, 'removeDomain'])->name('modelos.remove_domain');
     Route::post('/admin/modelos/upload-imagem', [ModeloController::class, 'uploadImagem'])->name('modelos.uploadImagem');
+
+
+    Route::get('/admin/instagram', [InstagramContaController::class, 'index'])->name('admin.instagram.index');
+    Route::post('/admin/instagram/conectar', [InstagramContaController::class, 'store'])->name('admin.instagram.conectar');
 
 
 

@@ -34,9 +34,16 @@
                 
                 <li class="{{ $elementActive == 'modelos' ? 'active' : '' }} nav-item">
                     <a class="d-flex align-items-center" href="/admin/modelos">
-                        <i data-feather='briefcase'></i><span class="menu-title text-truncate" data-i18n="Modelos">Atentende Chat</span>
+                        <i data-feather='briefcase'></i><span class="menu-title text-truncate" data-i18n="Modelos">Chat - site</span>
                     </a>
-                </li>                
+                </li> 
+
+               <li class="{{ $elementActive == 'instagram' ? 'active' : '' }} nav-item">
+                    <a class="d-flex align-items-center" href="/admin/instagram">
+                        <i data-feather='instagram'></i><span class="menu-title text-truncate" data-i18n="Instagram">Chat - Instagram</span>
+                    </a>
+                </li>
+              
                 
                 <li class="{{ $elementActive == 'usuarios' ? 'active' : '' }} nav-item">
                     <a class="d-flex align-items-center" href="/admin/usuarios">
@@ -51,8 +58,7 @@
 
 
             @elseif(Auth::user()->tipo_usuario == 'cliente')
-                <!-- Menu Cliente -->
-               
+                <!-- Menu Cliente -->               
 
                 
                     <li class="{{ $elementActive == 'minhas-reservas' ? 'active' : '' }} nav-item">

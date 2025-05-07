@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\site\SiteController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\InstagramWebhookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,3 +32,9 @@ Route::get('/chat/start', [ChatController::class, 'startChat'])->name('api.chat.
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+// Route::middleware([])->group(function () {
+//     Route::get('/webhook/meta', [InstagramWebhookController::class, 'verificar']);
+//     Route::post('/webhook/meta', [InstagramWebhookController::class, 'receber']);
+//   });
