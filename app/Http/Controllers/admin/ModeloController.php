@@ -26,52 +26,69 @@ class ModeloController extends Controller
             'imagem' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
     
-        $path = $request->file('imagem')->store('public/atendentes');
+        // Converter a imagem para Base64
+        $file = $request->file('imagem');
+        $base64 = base64_encode(file_get_contents($file->getRealPath()));
+        $mimeType = $file->getClientMimeType(); // Tipo MIME (image/jpeg, image/png)
     
-        // Remover 'public/' do caminho para usar com Storage::url()
-        $path = str_replace('public/', '', $path);
+        // Identificar o modelo associado ao usuário autenticado
         $modelo = Modelo::where('user_id', auth()->id())->first();
-        // Atualizar o modelo no banco de dados
-        // $modelo = Modelo::find($request->id); // Certifique-se de que o ID do modelo é enviado no request
-        if ($modelo) {
-            $modelo->imagem = $path;
-            $modelo->save();
+        if (!$modelo) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Modelo não encontrado para este usuário.'
+            ], 404);
+        }
+    
+        // Verificar se o modelo já tem uma imagem associada
+        if ($modelo->image) {
+            // Atualizar a imagem existente
+            $modelo->image->update([
+                'base64' => $base64,
+                'mime_type' => $mimeType,
+            ]);
+        } else {
+            // Criar uma nova imagem associada ao modelo
+            $modelo->image()->create([
+                'base64' => $base64,
+                'mime_type' => $mimeType,
+            ]);
         }
     
         return response()->json([
             'success' => true,
-            'caminho' => Storage::url($path) // Retorna URL pública da imagem
+            'caminho' => 'data:' . $mimeType . ';base64,' . $base64 // Retorna o Base64 completo
         ]);
     }
     
     
 
 
-    // Salvar Rascunho
-    public function saveDraft(Request $request)
-    {
-        $modelo = Modelo::where('user_id', auth()->id())->latest()->first();
-    
-        if ($modelo) {
-            $modelo->update([
-                'nome' => $request->nome,
-                'descricao' => $request->descricao,
-                'dados' => json_encode($request->dados),
-            ]);
-    
-            return response()->json(['nome' => $modelo->nome, 'token' => $modelo->token, 'estado' => 'Rascunho atualizado'], 200);
-        }
-    
-        $modelo = Modelo::create([
-            'user_id' => auth()->id(),
-            'nome' => $request->nome,
-            'descricao' => $request->descricao,
-            'dados' => json_encode($request->dados),
-            'token' => Str::uuid(),
-        ]);
-    
-        return response()->json(['nome' => $modelo->nome, 'token' => $modelo->token, 'estado' => 'Novo rascunho criado'], 200);
-    }
+     // Salvar Rascunho
+     public function saveDraft(Request $request)
+     {
+         $modelo = Modelo::where('user_id', auth()->id())->latest()->first();
+     
+         if ($modelo) {
+             $modelo->update([
+                 'nome' => $request->nome,
+                 'descricao' => $request->descricao,
+                 'dados' => json_encode($request->dados),
+             ]);
+     
+             return response()->json(['nome' => $modelo->nome, 'token' => $modelo->token, 'estado' => 'Rascunho atualizado'], 200);
+         }
+     
+         $modelo = Modelo::create([
+             'user_id' => auth()->id(),
+             'nome' => $request->nome,
+             'descricao' => $request->descricao,
+             'dados' => json_encode($request->dados),
+             'token' => Str::uuid(),
+         ]);
+     
+         return response()->json(['nome' => $modelo->nome, 'token' => $modelo->token, 'estado' => 'Novo rascunho criado'], 200);
+     }
     
     
     
@@ -79,30 +96,28 @@ class ModeloController extends Controller
     // Verificar se já existe um rascunho
     public function getDraft()
     {
-        $modelo = Modelo::where('user_id', auth()->id())
-            // ->where('dados->estado', 'Rascunho')
-            ->latest()
-            ->first();
-    
+        $modelo = Modelo::where('user_id', auth()->id())->latest()->first();
+
         if ($modelo) {
-            $dados = json_decode($modelo->dados, true); // Decodifica o JSON do campo 'dados'
+            $dados = json_decode($modelo->dados, true);
             return response()->json([
                 'nome' => $modelo->nome,
                 'descricao' => $modelo->descricao,
-                'estado' => $dados['estado'] ?? '--', // Busca o estado do JSON
+                'estado' => $dados['estado'] ?? '--',
                 'updated_at' => $modelo->updated_at,
                 'token' => $modelo->token,
-                'imagem' => $modelo->imagem,
+                'imagem' => $modelo->image ? 'data:' . $modelo->image->mime_type . ';base64,' . $modelo->image->base64 : null,
                 'activated_at' => $modelo->activated_at,
             ], 200);
         }
-    
+
         return response()->json([
             'nome' => 'não criado',
             'descricao' => '',
             'estado' => 'não criado',
             'updated_at' => '',
             'activated_at' => '',
+            'imagem' => null,
         ], 200);
     }
 

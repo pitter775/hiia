@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Chat;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Modelo extends Model
 {
@@ -29,5 +30,10 @@ class Modelo extends Model
     // Relacionamento com chats
     public function chats() {
         return $this->hasMany(Chat::class);
+    }
+
+    public function image(): MorphOne
+    {
+        return $this->morphOne(Image::class, 'imageable');
     }
 }

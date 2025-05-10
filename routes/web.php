@@ -13,6 +13,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\admin\InstagramContaController;
 use App\Http\Controllers\InstagramWebhookController;
 use OpenAI\Laravel\Facades\OpenAI;
+use App\Http\Controllers\ImageController;
 
 
 //integracao instagram facebook
@@ -20,6 +21,12 @@ use OpenAI\Laravel\Facades\OpenAI;
 
 Route::get('/webhook/meta', [InstagramWebhookController::class, 'verificar']);
 Route::post('/webhook/meta', [InstagramWebhookController::class, 'receber']);
+
+
+
+//images
+Route::post('/images/upload', [ImageController::class, 'upload'])->name('images.upload');
+Route::get('/images/{modelType}/{modelId}', [ImageController::class, 'get'])->name('images.get');
 
 
 Route::get('/test-openai', function () {
