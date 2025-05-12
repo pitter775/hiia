@@ -70,25 +70,25 @@ class AuthController extends Controller
 
 
      // Callback do Google
-     public function googleCallback(Request $request)
-     {
-         // Lógica de autenticação via Google
-         return response()->json(['message' => 'Callback Google recebido com sucesso']);
-     }
- 
-     // Callback do Instagram
-     public function instagramCallback(Request $request)
-     {
-         // Lógica de autenticação via Instagram
-         return response()->json(['message' => 'Callback Instagram recebido com sucesso']);
-     }
- 
-     // Callback do Facebook
-     public function facebookCallback(Request $request)
-     {
-         // Lógica de autenticação via Facebook
-         return response()->json(['message' => 'Callback Facebook recebido com sucesso']);
-     }
+    public function googleCallback(Request $request)
+    {
+        // Lógica de autenticação via Google
+        return response()->json(['message' => 'Callback Google recebido com sucesso']);
+    }
+
+    // Callback do Instagram
+    public function instagramCallback(Request $request)
+    {
+        // Lógica de autenticação via Instagram
+        return response()->json(['message' => 'Callback Instagram recebido com sucesso']);
+    }
+
+    // Callback do Facebook
+    public function facebookCallback(Request $request)
+    {
+        // Lógica de autenticação via Facebook
+        return response()->json(['message' => 'Callback Facebook recebido com sucesso']);
+    }
     
     
     

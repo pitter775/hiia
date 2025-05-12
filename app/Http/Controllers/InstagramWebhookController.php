@@ -12,16 +12,21 @@ class InstagramWebhookController extends Controller
     // Validação do webhook (Meta verifica o token)
     public function verificar(Request $request)
     {
-        $mode = $request->query('hub.mode');
-        $token = $request->query('hub.verify_token');
-        $challenge = $request->query('hub.challenge');
+        $verify_token = env('META_VERIFY_TOKEN'); // Agora ele pega o token do .env
+        $mode = $request->query('hub_mode');
+        $token = $request->query('hub_verify_token');
+        $challenge = $request->query('hub_challenge');
     
-        if ($mode === 'subscribe' && $token === 'hiia_token') {
-            return response($challenge, 200);
+        if ($mode && $token) {
+            if ($mode === 'subscribe' && $token === $verify_token) {
+                return response($challenge, 200);
+            } else {
+                return response('Verificação falhou', 403);
+            }
         }
-    
-        return response('Token inválido', 403);
+        return response('Requisição inválida', 400);
     }
+    
     
 
   // Recebe eventos do Instagram
