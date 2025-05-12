@@ -40,15 +40,16 @@
 
 
 
-      <script>
-        // Atendente inteligente fornecido por Hiia
-        (function () {
-            const script = document.createElement('script');
-            script.src = `http://127.0.0.1:8000/js/chat-widget.js?token=0679d574-58b8-4848-ae52-90d9b9b386f6`; 
-            script.async = true;
-            document.head.appendChild(script);
-        })();
-        </script>
+
+         <script>
+         // Atendente inteligente fornecido por Hiia
+         (function () {
+             const script = document.createElement('script');
+             script.src = `https://www.hiia.com.br/js/chat-widget.js?token=9158a689-e644-4f2f-a22c-3c87be035ad4`; 
+             script.async = true;
+             document.head.appendChild(script);
+         })();
+         </script>
 
 </head>
 {{-- <style>
