@@ -28,64 +28,52 @@ class InstagramWebhookController extends Controller
         return response('Requisição inválida', 400);
     }
 
+    // Monitor de Webhook
     public function monitor()
     {
         return response()->json(cache('instagram_event_log', []));
     }
-    
-    // Modificar o método receber para armazenar os eventos recebidos
+
+    // Receber Eventos e Responder Automaticamente
     public function receber(Request $request)
     {
-        // Armazena os eventos recebidos em cache para monitorar
+        // Armazenar eventos em cache para monitoramento
         $eventos = cache('instagram_event_log', []);
         $eventos[] = $request->all();
-        cache(['instagram_event_log' => $eventos], now()->addMinutes(10)); // Salva por 10 minutos
-        
+        cache(['instagram_event_log' => $eventos], now()->addMinutes(60)); // Salva por 1 hora
+
         Log::info('Evento Instagram recebido:', $request->all());
-    
+
         foreach ($request->entry as $entry) {
-            $igId = $entry['id'] ?? null;
-            $conta = InstagramConta::where('ig_business_id', $igId)->first();
-            if ($conta) {
-                EventoInstagram::create([
-                    'instagram_conta_id' => $conta->id,
-                    'payload' => json_encode($entry),
-                    'tipo_evento' => $entry['changes'][0]['field'] ?? 'desconhecido',
-                    'recebido_em' => now(),
-                ]);
-    
-                if ($entry['changes'][0]['field'] == 'comments') {
-                    $this->responderComentario($conta, $entry);
+            foreach ($entry['changes'] as $change) {
+                if ($change['field'] == 'comments') {
+                    $this->responderComentario($change['value']);
                 }
             }
         }
-    
+
         return response('OK', 200);
     }
-    
 
-    // Função para responder comentários automaticamente
-    private function responderComentario($conta, $entry)
+    // Responder Comentário Automaticamente
+    private function responderComentario($commentData)
     {
-        $commentId = $entry['changes'][0]['value']['id'] ?? null;
+        $commentId = $commentData['id'] ?? null;
         $message = "Olá! Obrigado por interagir conosco. Como posso te ajudar?";
-    
+
         if (!$commentId) {
             Log::error("Comentário não encontrado no evento.");
             return;
         }
-    
-        // Usar o Token da Página para responder
+
+        // Enviar resposta para o Instagram
         $accessToken = env('META_ACCESS_TOKEN');
-        
-        $response = Http::post("https://graph.facebook.com/{$commentId}/comments", [
+        $response = Http::post("https://graph.facebook.com/v16.0/{$commentId}/comments", [
             'message' => $message,
             'access_token' => $accessToken,
         ]);
-    
-        Log::info("Resposta enviada para o comentário {$commentId}: {$message}");
-    }
-    
-    
 
+        Log::info("Resposta enviada para o comentário {$commentId}: {$message}");
+        Log::info("Resposta API Instagram:", $response->json());
+    }
 }
