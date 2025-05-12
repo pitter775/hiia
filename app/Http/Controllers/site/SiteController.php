@@ -54,5 +54,10 @@ class SiteController extends Controller
         return view('site.termos-de-servico');
     }
 
+    public function excluirDadosUsuario()
+    {
+        return view('site.exclusao-dados');
+    }
+
     
 }

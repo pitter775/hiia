@@ -29,6 +29,11 @@ Route::get('/politica-privacidade', [SiteController::class, 'politicaPrivacidade
 Route::get('/termos-de-servico', [SiteController::class, 'termosServico'])->name('site.termos.servico');
 
 
+// Rota para exclusão de dados do usuário
+Route::get('/exclusao-dados-usuario', [\App\Http\Controllers\site\SiteController::class, 'excluirDadosUsuario'])->name('exclusao.dados.usuario');
+
+
+
 
 
 
@@ -78,9 +83,9 @@ Route::get('/debug-usuario', function () {
         'cadastro_completo' => auth()->user()->cadastro_completo,
     ]);
 });
-Route::get('/politica-privacidade', function () {
-    return view('site.politica-privacidade1');
-})->name('privacidade');
+// Route::get('/politica-privacidade', function () {
+//     return view('site.politica-privacidade1');
+// })->name('privacidade');
 
 // Rota pública para o site
 Route::get('/', [SiteController::class, 'index'])->name('site.index');
