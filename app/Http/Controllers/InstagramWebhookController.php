@@ -69,20 +69,22 @@ class InstagramWebhookController extends Controller
     {
         $commentId = $entry['changes'][0]['value']['comment_id'] ?? null;
         $message = "Olá! Obrigado por interagir conosco. Como posso te ajudar?";
-
+    
         if (!$commentId) {
             Log::error("Comentário não encontrado no evento.");
             return;
         }
-
+    
         // Enviar resposta diretamente para o Instagram usando o Token de Acesso
-        $accessToken = env('META_APP_SECRET');
-        $response = Http::post("https://graph.facebook.com/v16.0/{$commentId}/replies", [
+        $accessToken = env('META_ACCESS_TOKEN');
+        $response = Http::post("https://graph.facebook.com/{$commentId}/comments", [
             'message' => $message,
             'access_token' => $accessToken,
         ]);
-
+    
         Log::info("Resposta enviada para o comentário {$commentId}: {$message}");
+        Log::info("Resposta do Instagram: " . $response->body());
     }
+    
 
 }
