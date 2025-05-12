@@ -36,11 +36,11 @@ class InstagramWebhookController extends Controller
     // Modificar o método receber para armazenar os eventos recebidos
     public function receber(Request $request)
     {
-        // Armazenar os eventos recebidos em cache para monitorar
+        // Armazena os eventos recebidos em cache para monitorar
         $eventos = cache('instagram_event_log', []);
         $eventos[] = $request->all();
         cache(['instagram_event_log' => $eventos], now()->addMinutes(10)); // Salva por 10 minutos
-    
+        
         Log::info('Evento Instagram recebido:', $request->all());
     
         foreach ($request->entry as $entry) {
@@ -62,12 +62,12 @@ class InstagramWebhookController extends Controller
     
         return response('OK', 200);
     }
+    
 
-    // Função para responder comentários automaticamente
     // Função para responder comentários automaticamente
     private function responderComentario($conta, $entry)
     {
-        $commentId = $entry['changes'][0]['value']['comment_id'] ?? null;
+        $commentId = $entry['changes'][0]['value']['id'] ?? null;
         $message = "Olá! Obrigado por interagir conosco. Como posso te ajudar?";
     
         if (!$commentId) {
@@ -75,16 +75,17 @@ class InstagramWebhookController extends Controller
             return;
         }
     
-        // Enviar resposta diretamente para o Instagram usando o Token de Acesso
+        // Usar o Token da Página para responder
         $accessToken = env('META_ACCESS_TOKEN');
+        
         $response = Http::post("https://graph.facebook.com/{$commentId}/comments", [
             'message' => $message,
             'access_token' => $accessToken,
         ]);
     
         Log::info("Resposta enviada para o comentário {$commentId}: {$message}");
-        Log::info("Resposta do Instagram: " . $response->body());
     }
+    
     
 
 }

@@ -19,8 +19,7 @@ use App\Http\Controllers\ImageController;
 //integracao instagram facebook
 
 
-Route::get('/webhook/meta', [InstagramWebhookController::class, 'verificar']);
-Route::post('/webhook/meta', [InstagramWebhookController::class, 'receber']);
+
 
 Route::get('/monitor-webhook', [App\Http\Controllers\InstagramWebhookController::class, 'monitor']);
 
