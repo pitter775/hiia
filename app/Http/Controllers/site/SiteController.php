@@ -41,5 +41,18 @@ class SiteController extends Controller
 
         return view('site.index', compact('salas'));
     } 
+
+
+    // Métodos de Política de Privacidade e Termos de Serviço
+    public function politicaPrivacidade()
+    {
+        return view('site.politica-privacidade');
+    }
+
+    public function termosServico()
+    {
+        return view('site.termos-de-servico');
+    }
+
     
 }

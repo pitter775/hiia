@@ -24,6 +24,12 @@ use App\Http\Controllers\ImageController;
 Route::get('/monitor-webhook', [App\Http\Controllers\InstagramWebhookController::class, 'monitor']);
 
 
+// Rotas de Política de Privacidade e Termos de Serviço
+Route::get('/politica-privacidade', [SiteController::class, 'politicaPrivacidade'])->name('site.politica.privacidade');
+Route::get('/termos-de-servico', [SiteController::class, 'termosServico'])->name('site.termos.servico');
+
+
+
 
 
 //images
