@@ -7,6 +7,7 @@ use App\Models\InstagramConta;
 use App\Models\EventoInstagram;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use OpenAI\Laravel\Facades\OpenAI;
 
 class InstagramWebhookController extends Controller
 {
@@ -34,25 +35,59 @@ class InstagramWebhookController extends Controller
         return response()->json(cache('instagram_event_log', []));
     }
 
-    // Receber Eventos e Responder Automaticamente
     public function receber(Request $request)
     {
-        // Armazenar eventos em cache para monitoramento
-        $eventos = cache('instagram_event_log', []);
-        $eventos[] = $request->all();
-        cache(['instagram_event_log' => $eventos], now()->addMinutes(60)); // Salva por 1 hora
-
-        Log::info('Evento Instagram recebido:', $request->all());
-
+        Log::info('Webhook Instagram Recebido:', $request->all());
+    
         foreach ($request->entry as $entry) {
             foreach ($entry['changes'] as $change) {
                 if ($change['field'] == 'comments') {
-                    $this->responderComentario($change['value']);
+                    $this->responderComentarioComGPT($change['value']);
                 }
             }
         }
-
+    
         return response('OK', 200);
+    }
+    
+    private function responderComentarioComGPT($commentData)
+    {
+        $commentId = $commentData['id'] ?? null;
+        $comentarioTexto = $commentData['message'] ?? '';
+    
+        if (!$commentId || !$comentarioTexto) {
+            Log::error("Dados insuficientes para responder. Dados recebidos:", $commentData);
+            return;
+        }
+    
+        try {
+            // 1. Gera a resposta com GPT
+            $prompt = "Você é um assistente da Hiia Automação IA. Responda o seguinte comentário de forma simpática e profissional:\n\n\"{$comentarioTexto}\"";
+    
+            $respostaGPT = OpenAI::chat()->create([
+                'model' => 'gpt-3.5-turbo',
+                'messages' => [
+                    ['role' => 'system', 'content' => 'Você é um atendente simpático e profissional.'],
+                    ['role' => 'user', 'content' => $prompt],
+                ],
+            ]);
+    
+            $mensagem = $respostaGPT->choices[0]->message->content;
+    
+            // 2. Responde o comentário no Instagram
+            $accessToken = env('META_ACCESS_TOKEN');
+            $url = "https://graph.facebook.com/v22.0/{$commentId}/replies";
+    
+            $response = Http::post($url, [
+                'access_token' => $accessToken,
+                'message' => $mensagem,
+            ]);
+    
+            Log::info("Comentário {$commentId} respondido com: {$mensagem}");
+            Log::info("Resposta API Instagram:", $response->json());
+        } catch (\Exception $e) {
+            Log::error("Erro ao responder comentário: " . $e->getMessage());
+        }
     }
 
     // Responder Comentário Automaticamente

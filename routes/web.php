@@ -18,10 +18,67 @@ use App\Http\Controllers\ImageController;
 
 //integracao instagram facebook
 
+use Illuminate\Support\Facades\Http;
+
+use App\Http\Controllers\InstagramController;
 
 
 
-Route::get('/monitor-webhook', [App\Http\Controllers\InstagramWebhookController::class, 'monitor']);
+Route::get('/webhook/instagram', [InstagramWebhookController::class, 'verificar']);
+Route::post('/webhook/instagram', [InstagramWebhookController::class, 'receber']);
+Route::get('/webhook/monitor', [InstagramWebhookController::class, 'monitor']);
+
+
+
+Route::get('/instagram/posts', [InstagramController::class, 'listarMidias']);
+Route::get('/instagram/comments/{mediaId}', [InstagramController::class, 'listarComentarios']);
+Route::get('/instagram/reply-last/{mediaId}', [InstagramController::class, 'responderUltimoComentario']);
+Route::post('/instagram/reply/{commentId}', [InstagramController::class, 'responderComentario']);
+Route::get('/instagram/reply-gpt/{mediaId}', [InstagramController::class, 'responderUltimoComentarioComGPT']);
+
+
+
+
+Route::get('/instagram-midias', function () {
+    $token = env('META_ACCESS_TOKEN');
+    $instagramId = 'SEU_INSTAGRAM_ID_AQUI'; // 👉 coloca aqui seu Instagram Business ID
+
+    $response = Http::get("https://graph.facebook.com/v22.0/{$instagramId}/media", [
+        'access_token' => $token
+    ]);
+
+    return $response->json();
+});
+
+//Se não sabe seu Instagram ID:
+Route::get('/instagram/id', function () {
+    $token = env('META_ACCESS_TOKEN');
+
+    // Primeiro pega o Page ID
+    $pages = Http::get('https://graph.facebook.com/v22.0/me/accounts', [
+        'access_token' => $token
+    ]);
+
+    $pageId = $pages->json()['data'][0]['id'] ?? null;
+
+    if (!$pageId) {
+        return 'Nenhuma página encontrada.';
+    }
+
+    // Depois pega o Instagram Business ID
+    $response = Http::get("https://graph.facebook.com/v22.0/{$pageId}", [
+        'fields' => 'connected_instagram_account',
+        'access_token' => $token
+    ]);
+
+    return $response->json();
+});
+
+
+
+
+
+
 
 
 // Rotas de Política de Privacidade e Termos de Serviço
@@ -46,7 +103,7 @@ Route::get('/test-openai', function () {
     $response = OpenAI::chat()->create([
         'model' => 'gpt-3.5-turbo',
         'messages' => [
-            ['role' => 'system', 'content' => 'Seja extremamente resumido e direto.'],
+            ['role' => 'system', 'content' => 'Seja o silvio santos.. usa o maximo e emogis possiveis '],
             ['role' => 'user', 'content' => 'como crescem os cabelos?'],
         ],
         'temperature' => 0, // Garante respostas mais objetivas
