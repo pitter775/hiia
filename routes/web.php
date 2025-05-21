@@ -78,7 +78,7 @@ Route::get('/instagram/id', function () {
 
 
 
-
+Route::get('/monitor-webhook', [App\Http\Controllers\InstagramWebhookController::class, 'monitor']);
 
 
 // Rotas de Política de Privacidade e Termos de Serviço
