@@ -20,8 +20,8 @@ use App\Http\Controllers\ImageController;
 |
 */
 // Rota de Verificação do Webhook do Instagram/Facebook
-Route::get('/webhook/meta', [InstagramWebhookController::class, 'verificar']);
-Route::post('/webhook/meta', [InstagramWebhookController::class, 'receber']);
+// Route::get('/webhook/meta', [InstagramWebhookController::class, 'verificar']);
+// Route::post('/webhook/meta', [InstagramWebhookController::class, 'receber']);
 
 // Rotas do Chat GPT
 Route::get('chat-model/{token}', [ChatController::class, 'getChatConfig'])->name('api.chat-model');
