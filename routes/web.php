@@ -14,19 +14,23 @@ use App\Http\Controllers\admin\InstagramContaController;
 use App\Http\Controllers\InstagramWebhookController;
 use OpenAI\Laravel\Facades\OpenAI;
 use App\Http\Controllers\ImageController;
-
-
-//integracao instagram facebook
-
 use Illuminate\Support\Facades\Http;
-
 use App\Http\Controllers\InstagramController;
 
 
 
+
+// ✔️ Verificação do Webhook (GET do Meta)
 Route::get('/webhook/instagram', [InstagramWebhookController::class, 'verificar']);
+
+// ✔️ Receber os eventos do Webhook (POST do Meta)
 Route::post('/webhook/instagram', [InstagramWebhookController::class, 'receber']);
+
+// ✔️ Monitorar eventos recebidos no cache
 Route::get('/webhook/monitor', [InstagramWebhookController::class, 'monitor']);
+
+// ✔️ Teste manual do Webhook (para testar local sem esperar o Meta)
+Route::post('/webhook/testar', [InstagramWebhookController::class, 'testeManual']);
 
 
 
